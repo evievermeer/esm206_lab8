@@ -72,8 +72,99 @@ ggplot(data = homes_sub, aes(x=SqFt, y=Price))+
 
 ```
 
+Modeling the relationship now with home price as the dependent variable (outcome variable)
+
+```{r}
+
+homes_lm1 <- lm(Price ~ City + Bedrooms + Bathrooms + SqFt + PricePerSqFt + Status, data= homes_sub)
+
+# Make a subset that only contains the quantitative variables
+
+homes_quant <- homes_sub %>% 
+  select(Price:PricePerSqFt)
+
+homes_cor <- cor(homes_quant)
+homes_cor
+
+corrplot(homes_cor, method = "square")
 
 
+
+homes_lm1_tidy <- tidy(homes_lm1)
+
+```
+
+
+Try another model where we simplify this a bit:
+City
+SqFt
+Status
+
+
+```{r}
+homes_lm2 <- lm(Price ~ City + SqFt + Status, data = homes_sub)
+
+homes_lm2
+
+plot(homes_lm2)
+
+```
+
+```{r}
+summary(homes_lm1)
+```
+^^^ At about 1:40 (minute 70 of lecture) restroom break where Allison talks about the findings above and how they would be reported 
+
+
+Find the AIC value of each model:
+
+```{r}
+
+AIC(homes_lm1)
+AIC(homes_lm2)
+
+
+
+```
+
+Try another permutation of this model that you think might make sense, check out & compare the model fit, ouputs and AIC value. 
+
+
+
+```{r}
+homes_lm3 <- lm(Price ~ City + SqFt + Status + Bedrooms, data = homes_sub)
+
+summary(homes_lm3)
+AIC(homes_lm3)
+
+```
+
+Use modelsummary to show model outputs side by side
+
+If you use modelsummary to return model outputs of multiple models, it wants you to feed it to it as a list
+
+```{r}
+modelsummary(list(homes_lm1, homes_lm2,homes_lm3))
+```
+
+
+Now, start making predictions with this model 
+
+Use broom:: augment()
+
+
+```{r}
+homes_predicted <- augment(homes_lm1)
+
+view(homes_predicted)
+```
+
+
+Use predict() function to try out your model on new scenarios that you create
+
+```{r}
+
+```
 
 
 
